@@ -1,0 +1,19 @@
+# Dependencies and generated builds
+node_modules/
+dist/
+
+# Local environment and tool state
+.env
+.env.*
+!.env.example
+.vite/
+coverage/
+
+# Local captures and OS/editor files
+reference-captures/
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+

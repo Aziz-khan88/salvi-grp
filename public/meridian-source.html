@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ASTechSolutions — Private Coastal Estates</title>
+<meta name="description" content="ASTechSolutions represents the most significant residences on the California coast — architecture composed for the light, sold in absolute discretion." />
+
+<style>
+  @font-face{font-family:'Cormorant Garamond';src:url('/assets/fonts/cormorant-garamond-latin.woff2') format('woff2');font-style:normal;font-weight:300 600;font-display:swap}
+  @font-face{font-family:'Cormorant Garamond';src:url('/assets/fonts/cormorant-garamond-italic-latin.woff2') format('woff2');font-style:italic;font-weight:300 600;font-display:swap}
+  @font-face{font-family:'Inter';src:url('/assets/fonts/inter-latin.woff2') format('woff2');font-style:normal;font-weight:300 600;font-display:swap}
+</style>
+
+<style>
+  :root{
+    --ink:#050506;
+    --onyx:#0a0a0c;
+    --coal:#0f0f12;
+    --char:#16161a;
+    --char-2:#1d1d22;
+    --bone:#f1ece2;
+    --champ:#c8a86b;
+    --champ-2:#e6d3aa;
+    --champ-deep:#9c7f49;
+    --mist:#b9b4aa;
+    --muted:#807b72;
+    --muted-2:#5b5750;
+    --line:rgba(255,255,255,.09);
+    --line-2:rgba(255,255,255,.045);
+    --glass:rgba(255,255,255,.035);
+    --glass-2:rgba(255,255,255,.06);
+    --serif:'Cormorant Garamond',Georgia,serif;
+    --sans:'Inter',system-ui,sans-serif;
+    --maxw:1320px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --ease-2:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--sans);
+    color:var(--bone);
+    background:var(--ink);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.62;
+  }
+  ::selection{background:var(--champ);color:#0a0a0c}
+  img{display:block;max-width:100%}
+  a{color:inherit}
+
+  /* film grain (single-colour noise, no gradient) */
+  #grain{
+    position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- preloader ---------- */
+  #preloader{
+    position:fixed;inset:0;z-index:200;background:var(--ink);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;
+    transition:opacity 1.1s var(--ease), visibility 1.1s;
+  }
+  #preloader.done{opacity:0;visibility:hidden}
+  .pre-mark{font-family:var(--serif);font-size:clamp(1.55rem,4.4vw,2.6rem);font-weight:300;letter-spacing:.14em;color:var(--bone);padding-left:.14em}
+  .pre-bar{width:200px;height:1px;background:rgba(255,255,255,.12);position:relative;overflow:hidden}
+  .pre-bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--champ);transition:width .25s linear}
+  .pre-sub{font-size:.6rem;letter-spacing:.46em;color:var(--muted);text-transform:uppercase}
+  .pre-pct{font-variant-numeric:tabular-nums}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:90;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:26px clamp(20px,5vw,60px);
+    transition:background .55s var(--ease), padding .55s var(--ease), border-color .55s;
+    border-bottom:1px solid transparent;
+  }
+  nav.scrolled{
+    background:rgba(8,8,10,.72);backdrop-filter:blur(20px) saturate(130%);
+    -webkit-backdrop-filter:blur(20px) saturate(130%);
+    padding-top:16px;padding-bottom:16px;border-bottom:1px solid var(--line-2);
+  }
+  .brand{font-family:var(--sans);font-size:.8rem;letter-spacing:.18em;font-weight:500;color:#fff;text-decoration:none;white-space:nowrap;padding-left:.18em}
+  .nav-links{display:flex;gap:40px;list-style:none}
+  .nav-links a{
+    color:var(--mist);text-decoration:none;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
+    position:relative;transition:color .3s;
+  }
+  .nav-links a::after{content:'';position:absolute;left:0;bottom:-7px;width:0;height:1px;background:var(--champ);transition:width .4s var(--ease)}
+  .nav-links a:hover{color:#fff}
+  .nav-links a:hover::after{width:100%}
+  .nav-cta{
+    font-family:var(--sans);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--bone);text-decoration:none;padding:12px 24px;border:1px solid var(--line);border-radius:1px;
+    transition:.4s var(--ease);white-space:nowrap;
+  }
+  .nav-cta:hover{background:var(--champ);border-color:var(--champ);color:#0a0a0c}
+  .nav-toggle{display:none;background:none;border:0;cursor:pointer;width:30px;height:18px;position:relative}
+  .nav-toggle span{position:absolute;left:0;width:100%;height:1px;background:#fff;transition:.35s var(--ease)}
+  .nav-toggle span:nth-child(1){top:1px}.nav-toggle span:nth-child(2){top:8px}.nav-toggle span:nth-child(3){top:15px}
+
+  /* ---------- shared ---------- */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,60px);width:100%}
+  section{position:relative}
+  .eyebrow{
+    font-size:.66rem;letter-spacing:.46em;text-transform:uppercase;color:var(--champ);
+    display:inline-flex;align-items:center;gap:16px;margin-bottom:30px;font-weight:500;
+  }
+  .eyebrow::before{content:'';width:38px;height:1px;background:var(--champ);opacity:.8}
+  h1,h2,h3{font-family:var(--serif);font-weight:300;line-height:1.03;letter-spacing:-.005em}
+  .display{font-size:clamp(2.9rem,8vw,6.6rem)}
+  .h2{font-size:clamp(2.2rem,5.2vw,4.2rem)}
+  .h3{font-size:clamp(1.6rem,2.6vw,2.1rem)}
+  em{font-style:italic;color:var(--champ-2)}
+  p.lead{font-size:clamp(1.02rem,1.3vw,1.18rem);color:var(--mist);max-width:56ch;font-weight:300}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:12px;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
+    font-weight:500;text-decoration:none;padding:17px 34px;border-radius:1px;cursor:pointer;border:1px solid transparent;
+    transition:.45s var(--ease);font-family:var(--sans);
+  }
+  .btn-primary{background:var(--champ);color:#0a0a0c}
+  .btn-primary:hover{background:var(--champ-2);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:#fff;border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--champ);color:var(--champ-2)}
+  .btn .arrow{transition:transform .45s var(--ease)}
+  .btn:hover .arrow{transform:translateX(6px)}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(38px);transition:opacity 1.1s var(--ease-2), transform 1.1s var(--ease-2)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.1s}.reveal.d2{transition-delay:.2s}
+  .reveal.d3{transition-delay:.3s}.reveal.d4{transition-delay:.4s}.reveal.d5{transition-delay:.5s}
+
+  /* ============ HERO (scroll-scrub film) ============ */
+  .hero{height:440vh;position:relative;z-index:1}
+  .hero-pin{position:sticky;top:0;height:100vh;overflow:hidden;background:#000}
+  #film{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .hero-veil{
+    position:absolute;inset:0;pointer-events:none;z-index:2;
+    background:
+      radial-gradient(40% 34% at 96% 93%, rgba(5,5,6,.72) 0%, transparent 72%),
+      radial-gradient(120% 100% at 50% 42%, transparent 46%, rgba(5,5,6,.62) 100%),
+      linear-gradient(180deg, rgba(5,5,6,.55) 0%, transparent 20%, transparent 64%, rgba(5,5,6,.82) 100%);
+  }
+  .hero-ui{position:absolute;inset:0;z-index:3;pointer-events:none}
+  .h-block{position:absolute;left:0;right:0;padding:0 clamp(20px,5vw,60px);will-change:opacity,transform}
+  .h-block .wrap{padding:0}
+  .h-intro .eyebrow,.h-cap .cap,.scroll-cue{text-shadow:0 2px 22px rgba(0,0,0,.7)}
+  .h-intro .eyebrow{color:var(--champ-2)}
+  .h-intro{bottom:clamp(56px,12vh,120px)}
+  .h-intro h1{max-width:15ch;margin:10px 0 0;text-shadow:0 2px 8px rgba(0,0,0,.55),0 8px 50px rgba(0,0,0,.75)}
+  .h-cap{top:0;height:100%;display:flex;align-items:center}
+  .h-cap[data-side=left]{justify-content:flex-start}
+  .h-cap[data-side=right]{justify-content:flex-end}
+  .h-cap[data-side=left] .cap-in{text-align:left}
+  .h-cap[data-side=right] .cap-in{text-align:right}
+  .h-cap .cap-in{position:relative;isolation:isolate;max-width:min(680px,80vw)}
+  .h-cap .cap-in::before{content:'';position:absolute;inset:-52px -78px;z-index:-1;background:radial-gradient(74% 74% at 50% 50%,rgba(4,6,9,.62),transparent 72%);filter:blur(30px);pointer-events:none}
+  .h-cap h2{font-size:clamp(1.9rem,4.5vw,3.9rem);line-height:1.1;text-wrap:balance;text-shadow:0 2px 6px rgba(0,0,0,.55),0 6px 44px rgba(0,0,0,.9)}
+  .h-cap .cap{display:block;margin-top:22px;font-size:.66rem;letter-spacing:.4em;text-transform:uppercase;color:var(--mist)}
+  .scroll-cue{display:flex;align-items:center;gap:14px;font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-top:34px}
+  .scroll-cue i{display:block;width:1px;height:50px;background:rgba(255,255,255,.18);position:relative;overflow:hidden}
+  .scroll-cue i::after{content:'';position:absolute;top:-50px;left:0;width:1px;height:50px;background:var(--champ);animation:drop 2.6s var(--ease) infinite}
+  @keyframes drop{to{top:50px}}
+  .film-progress{position:absolute;left:clamp(20px,5vw,60px);right:clamp(20px,5vw,60px);bottom:30px;height:1px;background:rgba(255,255,255,.12);z-index:3}
+  .film-progress i{display:block;height:100%;width:0;background:var(--champ);transition:width .08s linear}
+
+  /* ============ MANIFESTO ============ */
+  .manifesto{padding:clamp(120px,18vh,220px) 0;text-align:center;background:var(--ink)}
+  .manifesto h2{font-size:clamp(2.3rem,5.6vw,4.8rem);max-width:20ch;margin:0 auto 34px}
+  .manifesto p{margin:0 auto}
+
+  /* ============ FEATURED RESIDENCE ============ */
+  .featured{padding:clamp(80px,10vh,140px) 0;background:var(--onyx)}
+  .feat-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(34px,5vw,80px);align-items:center}
+  .feat-media{position:relative;border-radius:2px;overflow:hidden;aspect-ratio:4/5;border:1px solid var(--line-2)}
+  .feat-media img{width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--ease)}
+  .feat-media:hover img{transform:scale(1.05)}
+  .feat-media .pill{position:absolute;top:24px;left:24px;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.4);border:1px solid var(--line);padding:9px 16px;border-radius:1px;backdrop-filter:blur(8px)}
+  .feat-copy .price{font-family:var(--serif);font-size:clamp(2rem,3vw,2.8rem);color:#fff;margin:6px 0 4px}
+  .feat-copy .price small{font-size:.9rem;color:var(--muted);font-family:var(--sans);letter-spacing:.04em;display:block;margin-top:6px}
+  .feat-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);margin:36px 0 38px}
+  .feat-stats .st{background:var(--onyx);padding:24px 22px}
+  .feat-stats .st b{font-family:var(--serif);font-size:2.2rem;font-weight:400;color:#fff;display:block;line-height:1}
+  .feat-stats .st b small{font-size:1rem;color:var(--champ);font-family:var(--sans);font-weight:400;margin-left:3px}
+  .feat-stats .st span{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);display:block;margin-top:12px}
+
+  /* ============ PORTFOLIO / LISTINGS ============ */
+  .portfolio{padding:clamp(90px,12vh,160px) 0;background:var(--ink)}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:64px}
+  .sec-head .lead{margin-top:18px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  .card{position:relative;border-radius:2px;overflow:hidden;border:1px solid var(--line-2);background:var(--coal);cursor:pointer}
+  .card .ph{position:relative;aspect-ratio:4/3;overflow:hidden}
+  .card .ph img{width:100%;height:100%;object-fit:cover;transition:transform 1.3s var(--ease)}
+  .card:hover .ph img{transform:scale(1.07)}
+  .card .ph::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(6,6,7,.55));opacity:.9}
+  .card .tag{position:absolute;top:18px;left:18px;z-index:2;font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;color:#0a0a0c;background:var(--champ);padding:7px 13px;border-radius:1px;font-weight:500}
+  .card .body{padding:26px 26px 30px}
+  .card .city{font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--champ);display:block;margin-bottom:12px}
+  .card h3{font-size:1.7rem;color:#fff;margin-bottom:18px}
+  .card .meta{display:flex;gap:20px;flex-wrap:wrap;font-size:.74rem;color:var(--mist);letter-spacing:.04em;padding-top:18px;border-top:1px solid var(--line-2)}
+  .card .meta span b{color:#fff;font-weight:500}
+  .card .price-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px}
+  .card .price-row .pr{font-family:var(--serif);font-size:1.5rem;color:#fff}
+  .card .price-row .view{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);transition:color .3s}
+  .card:hover .price-row .view{color:var(--champ-2)}
+
+  /* ============ EXPERIENCE — pinned horizontal scroll ============ */
+  .experience{padding:clamp(40px,6vh,80px) 0 0;background:var(--onyx)}
+  .g-hint{font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px}
+  .hscroll{position:relative}                       /* tall: JS sets height = horizontal travel + 100vh */
+  .hscroll-pin{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
+  .htrack{display:flex;gap:24px;padding:0 clamp(20px,5vw,60px);will-change:transform}
+  .r-card{flex:0 0 clamp(300px,40vw,540px);height:clamp(420px,64vh,640px);border-radius:2px;position:relative;overflow:hidden;border:1px solid var(--line-2);display:flex;align-items:flex-end;padding:34px}
+  .r-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+  .r-card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 38%,rgba(5,5,6,.86));z-index:1}
+  .r-card .m{position:relative;z-index:2}
+  .r-card .m span{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--champ-2)}
+  .r-card .m b{font-family:var(--serif);font-size:1.9rem;font-weight:400;display:block;margin-top:8px;color:#fff}
+  /* mobile: fall back to native horizontal swipe, no pin */
+  @media(max-width:760px){
+    .hscroll{height:auto !important}
+    .hscroll-pin{position:static;height:auto;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .hscroll-pin::-webkit-scrollbar{display:none}
+    .htrack{transform:none !important;padding-bottom:10px}
+    .r-card{flex-basis:80vw;height:62vh;scroll-snap-align:center}
+  }
+
+  /* ============ PROCESS ============ */
+  .process{padding:clamp(90px,12vh,160px) 0;background:var(--ink)}
+  .proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);margin-top:60px}
+  .proc-card{background:var(--ink);padding:44px 34px;transition:background .5s var(--ease)}
+  .proc-card:hover{background:var(--coal)}
+  .proc-card .pn{font-family:var(--serif);font-size:1rem;color:var(--champ);letter-spacing:.1em}
+  .proc-card h3{font-size:1.5rem;color:#fff;margin:26px 0 14px}
+  .proc-card p{color:var(--muted);font-weight:300;font-size:.92rem}
+
+  /* ============ CTA ============ */
+  .cta{padding:clamp(110px,16vh,200px) 0;text-align:center;background:var(--onyx);position:relative;overflow:hidden}
+  .cta h2{font-size:clamp(2.6rem,6vw,5.4rem);max-width:15ch;margin:8px auto 28px}
+  .cta p{margin:0 auto 48px}
+  .form{max-width:580px;margin:0 auto;text-align:left;display:grid;gap:20px}
+  .form .row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .field label{font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:11px}
+  .field input,.field textarea{
+    width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);
+    padding:12px 2px;color:#fff;font-family:var(--sans);font-size:.96rem;transition:border-color .35s;
+  }
+  .field input::placeholder,.field textarea::placeholder{color:var(--muted-2)}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--champ)}
+  .field textarea{resize:vertical;min-height:84px}
+  .form .btn{justify-content:center;width:100%;margin-top:10px}
+  .form-done{display:none;text-align:center;padding:20px 0}
+  .form-done.show{display:block}
+  .form-done b{font-family:var(--serif);font-size:2rem;color:var(--champ-2);display:block;margin-bottom:10px;font-weight:400}
+
+  /* ============ FOOTER ============ */
+  footer{background:var(--ink);padding:90px 0 42px;border-top:1px solid var(--line-2)}
+  .foot-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:44px;margin-bottom:64px}
+  .foot-brand .brand{font-size:1rem;padding-left:0}
+  .foot-brand p{color:var(--muted);font-size:.9rem;font-weight:300;margin-top:20px;max-width:32ch}
+  .foot-col h4{font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;color:var(--mist);margin-bottom:22px;font-weight:500}
+  .foot-col a{display:block;color:var(--muted);text-decoration:none;font-size:.9rem;margin-bottom:13px;transition:color .3s}
+  .foot-col a:hover{color:var(--champ)}
+  .foot-bot{display:flex;justify-content:space-between;align-items:center;padding-top:32px;border-top:1px solid var(--line-2);font-size:.74rem;color:var(--muted-2);letter-spacing:.04em;flex-wrap:wrap;gap:14px}
+  .powered-brand{display:flex;align-items:center;color:var(--muted-2);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase}
+
+  /* ============ responsive ============ */
+  @media(max-width:980px){
+    .feat-grid,.proc-grid{grid-template-columns:1fr}
+    .grid{grid-template-columns:1fr 1fr}
+    .proc-grid{grid-template-columns:1fr 1fr}
+    .foot-top{grid-template-columns:1fr 1fr}
+    .feat-media{aspect-ratio:16/10}
+  }
+  @media(max-width:720px){
+    .nav-links,.nav-cta{display:none}
+    .nav-toggle{display:block}
+    .h-intro .eyebrow{font-size:.58rem;letter-spacing:.25em;gap:11px}
+    .h-intro .eyebrow::before{width:30px}
+    nav.open .nav-links{display:flex;position:fixed;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:36px;background:rgba(5,5,6,.97);backdrop-filter:blur(20px);z-index:-1}
+    nav.open .nav-links a{font-size:1.05rem}
+    .grid{grid-template-columns:1fr}
+    .form .row{grid-template-columns:1fr}
+    .foot-top{grid-template-columns:1fr}
+    .feat-stats{grid-template-columns:1fr 1fr}
+    .sec-head{align-items:flex-start}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<div id="grain"></div>
+
+<!-- preloader -->
+<div id="preloader">
+  <div class="pre-mark">ASTechSolutions</div>
+  <div class="pre-bar"><i id="preBar"></i></div>
+  <div class="pre-sub">Loading AStechSolutions · <span class="pre-pct" id="prePct">0</span>%</div>
+</div>
+
+<!-- nav -->
+<nav id="nav">
+  <a href="#top" class="brand">ASTechSolutions</a>
+  <ul class="nav-links">
+    <li><a href="#portfolio">Residences</a></li>
+    <li><a href="#featured">The Estate</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#process">Private Office</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Enquire</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-pin">
+      <canvas id="film"></canvas>
+      <div class="hero-veil"></div>
+      <div class="hero-ui">
+        <div class="h-block h-intro">
+          <div class="wrap">
+            <span class="eyebrow">ASTechSolutions · Private Coastal Estates</span>
+            <h1 class="display">Live above <em>the Pacific.</em></h1>
+            <div class="scroll-cue">Scroll to enter <i></i></div>
+          </div>
+        </div>
+        <div class="h-block h-cap" data-in="0.12" data-out="0.25" data-side="left">
+          <div class="cap-in"><h2>Where the land ends, <em>the living begins.</em></h2></div>
+        </div>
+        <div class="h-block h-cap" data-in="0.25" data-out="0.38" data-side="right">
+          <div class="cap-in"><h2>Glass dissolving <em>into the horizon.</em></h2></div>
+        </div>
+        <div class="h-block h-cap" data-in="0.38" data-out="0.51" data-side="left">
+          <div class="cap-in"><h2>Light, the <em>rarest material.</em></h2></div>
+        </div>
+        <div class="h-block h-cap" data-in="0.51" data-out="0.64" data-side="right">
+          <div class="cap-in"><h2>Space that breathes <em>with the tide.</em></h2></div>
+        </div>
+        <div class="h-block h-cap" data-in="0.64" data-out="0.77" data-side="left">
+          <div class="cap-in"><h2>Every threshold, <em>considered.</em></h2></div>
+        </div>
+        <div class="h-block h-cap" data-in="0.77" data-out="0.90" data-side="right">
+          <div class="cap-in"><h2>Composed around <em>the sunset.</em></h2></div>
+        </div>
+        <div class="h-block h-cap" data-in="0.90" data-side="left">
+          <div class="cap-in">
+            <h2>A private world, <em>delivered in silence.</em></h2>
+            <span class="cap">The Signature Residence · Malibu, California</span>
+          </div>
+        </div>
+      </div>
+      <div class="film-progress"><i id="filmBar"></i></div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto">
+    <div class="wrap">
+      <span class="eyebrow reveal" style="justify-content:center">The AStechSolutions Standard</span>
+      <h2 class="reveal d1">We do not list homes.<br>We place <em>the irreplaceable.</em></h2>
+      <p class="lead reveal d2">A curated portfolio of the most significant residences on the California coast — represented quietly, viewed privately, and acquired with absolute discretion.</p>
+    </div>
+  </section>
+
+  <!-- FEATURED RESIDENCE -->
+  <section class="featured" id="featured">
+    <div class="wrap">
+      <div class="feat-grid">
+        <div class="feat-media reveal">
+          <span class="pill">Now Representing</span>
+          <img src="assets/listings/ambiance-interior.jpg" alt="The Signature Residence interior" loading="lazy">
+        </div>
+        <div class="feat-copy reveal d1">
+          <span class="eyebrow">The Signature Residence</span>
+          <h2 class="h2">A glass pavilion <em>on the bluff.</em></h2>
+          <p class="lead">Suspended above the surf line on more than an acre of coastline, this is a single, uninterrupted gesture of glass, stone and water — engineered so the architecture all but disappears into the horizon.</p>
+          <div class="price">Price upon request<small>Represented privately · Malibu, California</small></div>
+          <div class="feat-stats">
+            <div class="st"><b data-count="7"></b><span>Bedrooms</span></div>
+            <div class="st"><b data-count="9"></b><span>Bathrooms</span></div>
+            <div class="st"><b data-count="12400" data-comma="1"></b><span>Square feet</span></div>
+            <div class="st"><b data-count="1" data-suffix=".2" data-raw="1"></b><span>Acres of coastline</span></div>
+          </div>
+          <a href="#contact" class="btn btn-primary">Request the dossier <span class="arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section class="portfolio" id="portfolio">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="reveal">
+          <span class="eyebrow">The Portfolio</span>
+          <h2 class="h2">Currently <em>represented.</em></h2>
+        </div>
+        <p class="lead reveal d1">Six residences along the California coast — each shown by private appointment only.</p>
+      </div>
+      <div class="grid" id="grid">
+        <!-- LISTING CARDS -->
+        <article class="card reveal">
+          <div class="ph"><span class="tag">Oceanfront</span><img src="assets/listings/listing-1.jpg" alt="Carbon Beach Pavilion, Malibu" loading="lazy"></div>
+          <div class="body">
+            <span class="city">Malibu, California</span>
+            <h3>Carbon Beach Pavilion</h3>
+            <div class="meta"><span><b>7</b> Bed</span><span><b>9</b> Bath</span><span><b>11,800</b> Sq Ft</span></div>
+            <div class="price-row"><span class="pr">$48,500,000</span><span class="view">View →</span></div>
+          </div>
+        </article>
+        <article class="card reveal d1">
+          <div class="ph"><span class="tag">Ridgeline</span><img src="assets/listings/listing-2.jpg" alt="The Stradella Residence, Bel Air" loading="lazy"></div>
+          <div class="body">
+            <span class="city">Bel Air, Los Angeles</span>
+            <h3>The Stradella Residence</h3>
+            <div class="meta"><span><b>6</b> Bed</span><span><b>8</b> Bath</span><span><b>10,400</b> Sq Ft</span></div>
+            <div class="price-row"><span class="pr">$36,900,000</span><span class="view">View →</span></div>
+          </div>
+        </article>
+        <article class="card reveal d2">
+          <div class="ph"><span class="tag">City Views</span><img src="assets/listings/listing-3.jpg" alt="Trousdale Glass House, Beverly Hills" loading="lazy"></div>
+          <div class="body">
+            <span class="city">Beverly Hills, California</span>
+            <h3>Trousdale Glass House</h3>
+            <div class="meta"><span><b>5</b> Bed</span><span><b>7</b> Bath</span><span><b>8,900</b> Sq Ft</span></div>
+            <div class="price-row"><span class="pr">$29,750,000</span><span class="view">View →</span></div>
+          </div>
+        </article>
+        <article class="card reveal">
+          <div class="ph"><span class="tag">Estate</span><img src="assets/listings/listing-4.jpg" alt="Villa Montecito" loading="lazy"></div>
+          <div class="body">
+            <span class="city">Montecito, California</span>
+            <h3>Villa Montecito</h3>
+            <div class="meta"><span><b>8</b> Bed</span><span><b>11</b> Bath</span><span><b>15,600</b> Sq Ft</span></div>
+            <div class="price-row"><span class="pr">$64,000,000</span><span class="view">View →</span></div>
+          </div>
+        </article>
+        <article class="card reveal d1">
+          <div class="ph"><span class="tag">Coastal</span><img src="assets/listings/listing-5.jpg" alt="The Cove House, Newport Coast" loading="lazy"></div>
+          <div class="body">
+            <span class="city">Newport Coast, California</span>
+            <h3>The Cove House</h3>
+            <div class="meta"><span><b>5</b> Bed</span><span><b>6</b> Bath</span><span><b>7,800</b> Sq Ft</span></div>
+            <div class="price-row"><span class="pr">$22,400,000</span><span class="view">View →</span></div>
+          </div>
+        </article>
+        <article class="card reveal d2">
+          <div class="ph"><span class="tag">Riviera</span><img src="assets/listings/listing-6.jpg" alt="Palisades Manor, Pacific Palisades" loading="lazy"></div>
+          <div class="body">
+            <span class="city">Pacific Palisades, Los Angeles</span>
+            <h3>Palisades Manor</h3>
+            <div class="meta"><span><b>6</b> Bed</span><span><b>8</b> Bath</span><span><b>9,200</b> Sq Ft</span></div>
+            <div class="price-row"><span class="pr">$18,900,000</span><span class="view">View →</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="experience" id="experience">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div>
+          <span class="eyebrow">Inside the Estate</span>
+          <h2 class="h2">Every threshold, <em>considered.</em></h2>
+        </div>
+        <span class="g-hint">Scroll to explore →</span>
+      </div>
+    </div>
+    <div class="hscroll" id="hscroll">
+      <div class="hscroll-pin">
+        <div class="htrack" id="htrack">
+          <div class="r-card"><img src="assets/listings/ambiance-terrace.jpg" alt=""><div class="m"><span>Exterior</span><b>The Infinity Edge</b></div></div>
+          <div class="r-card"><img src="assets/listings/ambiance-interior.jpg" alt=""><div class="m"><span>Main Level</span><b>The Great Room</b></div></div>
+          <div class="r-card"><img src="assets/listings/listing-2.jpg" alt=""><div class="m"><span>Grounds</span><b>The Pool House</b></div></div>
+          <div class="r-card"><img src="assets/listings/ambiance-coast.jpg" alt=""><div class="m"><span>Setting</span><b>The Coastline</b></div></div>
+          <div class="r-card"><img src="assets/listings/listing-4.jpg" alt=""><div class="m"><span>Arrival</span><b>The Motor Court</b></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="process" id="process">
+    <div class="wrap">
+      <div class="sec-head reveal" style="display:block;margin-bottom:0">
+        <span class="eyebrow">The Private Office</span>
+        <h2 class="h2">Representation, <em>without the noise.</em></h2>
+        <p class="lead" style="margin-top:18px">A single principal carries your search — or your sale — from first conversation to closing, off-market and in confidence.</p>
+      </div>
+      <div class="proc-grid">
+        <div class="proc-card reveal"><div class="pn">01</div><h3>Discovery</h3><p>A private conversation to understand the life you intend to live — the light, the water, the distance from the world.</p></div>
+        <div class="proc-card reveal d1"><div class="pn">02</div><h3>Curation</h3><p>Access to residences that never reach the open market, matched precisely to your brief and presented in full dossier.</p></div>
+        <div class="proc-card reveal d2"><div class="pn">03</div><h3>Private Viewings</h3><p>Discreet, unhurried showings arranged around you — by air, by water, or after hours, never on display.</p></div>
+        <div class="proc-card reveal d3"><div class="pn">04</div><h3>Acquisition</h3><p>Negotiation, diligence and closing handled end to end by one principal, with absolute confidentiality throughout.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="contact">
+    <div class="wrap">
+      <span class="eyebrow reveal" style="justify-content:center">Begin in confidence</span>
+      <h2 class="reveal d1">Request a <em>private consultation.</em></h2>
+      <p class="lead reveal d2">Tell us what you are looking for — or what you may quietly consider selling. A principal responds within one business day.</p>
+      <form class="form reveal d3" id="enquiry">
+        <div class="row">
+          <div class="field"><label>Full name</label><input required type="text" placeholder="Your name"></div>
+          <div class="field"><label>Email</label><input required type="email" placeholder="you@email.com"></div>
+        </div>
+        <div class="field"><label>What are you looking for?</label><textarea placeholder="Market, budget, timing, and the life you intend to live by the sea…"></textarea></div>
+        <button type="submit" class="btn btn-primary">Submit enquiry <span class="arrow">→</span></button>
+      </form>
+      <div class="form-done" id="formDone">
+        <b>Thank you.</b>
+        <p class="lead" style="margin:0 auto">Your enquiry is with our private office. We will be in touch within one business day, in complete confidence.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-top">
+        <div class="foot-brand">
+          <a href="#top" class="brand">ASTechSolutions</a>
+          <p>Private representation for the most significant residences on the California coast.</p>
+        </div>
+        <div class="foot-col">
+          <h4>Portfolio</h4>
+          <a href="#portfolio">Residences</a><a href="#featured">Signature Estate</a><a href="#experience">Experience</a><a href="#contact">Off-Market</a>
+        </div>
+        <div class="foot-col">
+          <h4>Office</h4>
+          <a href="#process">Private Office</a><a href="#">About</a><a href="#">Press</a><a href="#contact">Contact</a>
+        </div>
+        <div class="foot-col">
+          <h4>Connect</h4>
+          <a href="#">Instagram</a><a href="#">LinkedIn</a><a href="#">Journal</a><a href="#">Newsletter</a>
+        </div>
+      </div>
+      <div class="foot-bot">
+        <span>© 2026 AStechSolutions Private Estates · DRE #02XXXXXX</span>
+        <span class="powered-brand" aria-label="ASTechSolutions">ASTechSolutions</span>
+        <span>Privacy · Terms · Equal Housing Opportunity</span>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<script>
+/* =================== SMOOTH SCROLL-SCRUB FILM ENGINE =================== */
+(function(){
+  const FRAME_COUNT = 173;
+  const PATH = i => `frames/f_${String(i).padStart(4,'0')}.webp`;
+  const OVERSCAN = 1.0;   // true cover fit, no fractional enlargement
+
+  const canvas = document.getElementById('film');
+  const ctx = canvas.getContext('2d', { alpha:false });
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';   // default is 'low' (bilinear) → softens every scaled draw
+  const preloader = document.getElementById('preloader');
+  const preBar = document.getElementById('preBar');
+  const prePct = document.getElementById('prePct');
+  const hero = document.getElementById('top');
+  const filmBar = document.getElementById('filmBar');
+
+  const intro = document.querySelector('.h-intro');
+  const caps  = [...document.querySelectorAll('.h-cap')];
+
+  const frames = new Array(FRAME_COUNT);
+  let loaded = 0, ready = false;
+  let dpr = Math.min(window.devicePixelRatio || 1, 3);
+  let span = 1;
+
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 3);   // was 2 — starved hi-DPI screens
+    canvas.width  = Math.round(window.innerWidth  * dpr);
+    canvas.height = Math.round(window.innerHeight * dpr);
+    ctx.imageSmoothingEnabled = true;                  // smoothing resets on canvas resize
+    ctx.imageSmoothingQuality = 'high';
+    span = Math.max(1, hero.offsetHeight - window.innerHeight); // cached: no per-frame layout reads
+    drawIndex(Math.round(curFrame), true);
+  }
+
+  function drawCover(img){
+    if(!img) return;
+    const cw = canvas.width, ch = canvas.height;
+    const ir = img.width / img.height, cr = cw / ch;
+    let dw, dh;
+    if (cr > ir){ dw = cw * OVERSCAN; dh = dw / ir; }
+    else        { dh = ch * OVERSCAN; dw = dh * ir; }
+    dw = Math.ceil(dw); dh = Math.ceil(dh);
+    const dx = Math.round((cw - dw) / 2), dy = Math.round((ch - dh) / 2);
+    ctx.drawImage(img, dx, dy, dw, dh);
+  }
+
+  let lastDrawn = -1;
+  function drawIndex(i, force){
+    i = Math.max(0, Math.min(FRAME_COUNT - 1, i));
+    if (i === lastDrawn && !force) return;
+    const img = frames[i];
+    if (img && img.complete !== false) { drawCover(img); lastDrawn = i; }
+  }
+
+  /* --- preload with a small concurrency pool --- */
+  function load(i){
+    return new Promise(res => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.onload = () => {
+        frames[i] = img; loaded++; update(); res();
+        // warm the decode in the background so drawing never decodes mid-scroll (kills the hitching)
+        if (img.decode) img.decode().catch(()=>{});
+      };
+      img.onerror = () => { loaded++; update(); res(); };
+      img.src = PATH(i + 1);
+    });
+  }
+  function update(){
+    const pct = Math.round((loaded / FRAME_COUNT) * 100);
+    preBar.style.width = pct + '%';
+    prePct.textContent = pct;
+  }
+  async function preload(){
+    // load the very first frame immediately so we can paint behind the preloader
+    await load(0); resize();
+    const POOL = 10; let next = 1;
+    async function worker(){ while(next < FRAME_COUNT){ await load(next++); } }
+    await Promise.all(Array.from({length:POOL}, worker));
+    ready = true;
+    requestAnimationFrame(()=> setTimeout(()=> preloader.classList.add('done'), 350));
+  }
+
+  /* --- scroll → frame, with lerp smoothing --- */
+  let targetFrame = 0, curFrame = 0, heroVisible = true;
+  function progress(){
+    return Math.max(0, Math.min(1, window.scrollY / span));
+  }
+  function setOverlay(p){
+    // intro fades out before the first caption
+    const a = 1 - smooth(p, 0.03, 0.11);
+    intro.style.opacity = a;
+    intro.style.transform = `translateY(${ -p*70 }px)`;
+    // data-driven flying captions: each enters from its side over a scroll window
+    const FADE = 0.04;
+    caps.forEach(el => {
+      const inA = +el.dataset.in;
+      const side = el.dataset.side === 'right' ? 1 : -1;
+      const enter = smooth(p, inA, inA + FADE);
+      const exit  = el.dataset.out ? smooth(p, +el.dataset.out - FADE, +el.dataset.out) : 0;
+      el.style.opacity = enter * (1 - exit);
+      el.style.transform = `translateX(${ (1 - enter) * 80 * side }px)`;
+    });
+  }
+  function smooth(x, a, b){ const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t*t*(3 - 2*t); }
+
+  function tick(){
+    if (ready && heroVisible){
+      const p = progress();
+      targetFrame = p * (FRAME_COUNT - 1);
+      curFrame += (targetFrame - curFrame) * 0.17;   // buttery lerp
+      if (Math.abs(targetFrame - curFrame) < 0.05) curFrame = targetFrame;
+      drawIndex(Math.round(curFrame), false);
+      filmBar.style.width = (p * 100) + '%';
+      setOverlay(p);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // pause drawing work when the hero scrolls out of view
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(es => { heroVisible = es[0].isIntersecting; }, { threshold:0 })
+      .observe(hero);
+  }
+  window.addEventListener('resize', resize, { passive:true });
+
+  preload();
+  requestAnimationFrame(tick);
+  // safety: never strand the user behind the preloader
+  window.addEventListener('load', ()=> setTimeout(()=> preloader.classList.add('done'), 15000));
+})();
+
+/* =================== UI =================== */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive:true });
+
+const toggle = document.getElementById('navToggle');
+toggle.addEventListener('click', () => nav.classList.toggle('open'));
+nav.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+// reveal on scroll
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold:0.14, rootMargin:'0px 0px -7% 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// count-up
+const cio = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target, target = +el.dataset.count, suffix = el.dataset.suffix || '', comma = el.dataset.comma;
+    const dur = 1700, start = performance.now();
+    (function tick(now){
+      const k = Math.min(1, (now - start) / dur), eased = 1 - Math.pow(1 - k, 3);
+      let v = Math.round(target * eased);
+      el.textContent = (comma ? v.toLocaleString() : v) + (k >= 1 ? suffix : '');
+      if (k < 1) requestAnimationFrame(tick);
+    })(start);
+    cio.unobserve(el);
+  });
+}, { threshold:0.6 });
+document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
+
+// pinned horizontal scroll for the experience gallery
+(function(){
+  const sec = document.getElementById('hscroll');
+  const track = document.getElementById('htrack');
+  if(!sec || !track) return;
+  let maxX = 0, startY = 0, range = 1, active = false;
+
+  function absTop(el){ let y = 0; while(el){ y += el.offsetTop; el = el.offsetParent; } return y; }
+
+  function measure(){
+    if(window.innerWidth <= 760){            // mobile = native swipe, no pin
+      active = false; sec.style.height = ''; track.style.transform = '';
+      return;
+    }
+    active = true;
+    maxX  = Math.max(0, track.scrollWidth - window.innerWidth);
+    sec.style.height = (maxX + window.innerHeight) + 'px';   // horizontal travel + one viewport of pin
+    startY = absTop(sec);
+    range  = Math.max(1, sec.offsetHeight - window.innerHeight);
+    apply();
+  }
+  function apply(){
+    if(!active) return;
+    const p = Math.max(0, Math.min(1, (window.scrollY - startY) / range));
+    track.style.transform = `translate3d(${ -p * maxX }px,0,0)`;
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if(!ticking){ ticking = true; requestAnimationFrame(() => { apply(); ticking = false; }); }
+  }, { passive:true });
+  window.addEventListener('resize', measure, { passive:true });
+  window.addEventListener('load', measure);
+  measure();
+})();
+
+// form
+const form = document.getElementById('enquiry');
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  form.style.display = 'none';
+  document.getElementById('formDone').classList.add('show');
+});
+</script>
+</body>
+</html>

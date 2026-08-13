@@ -1,0 +1,17 @@
+/* The original local prototype injects and owns the complete visual theme. */
+.source-error {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 2rem;
+}
+
+/* Preserve the original media frame while respecting the user's transparent anniversary mark. */
+.feat-media.anniversary-mark img {
+  object-fit: contain;
+  padding: clamp(28px, 5vw, 68px);
+}
+
+.feat-media.anniversary-mark:hover img {
+  transform: none;
+}
