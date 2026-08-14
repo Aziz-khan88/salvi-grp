@@ -1,9 +1,19 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import useEmblaCarousel from "embla-carousel-react";
 
 const SOURCE_FILE = "/meridian-source.html";
 const STYLE_ID = "meridian-source-styles";
 const SCRIPT_ID = "meridian-source-engine";
 const SALVI_LOGO = "/assets/salvi/logo-50.png";
+const FOOTER_SALVI_LOGO = "/assets/salvi/logo-footer.webp";
+const FOOTER_HILLSHIRE_LOGO = "/assets/salvi/hillshire-footer.png";
+const FOOTER_SAVONA_LOGO = "/assets/salvi/savona-footer.png";
+const CTA_ARROW_DARK = "/assets/salvi/figma-cta-arrow.svg";
+const CTA_ARROW_LIGHT = "/assets/salvi/figma-cta-arrow-light.svg";
+const TESTIMONIAL_PREV = "/assets/salvi/figma-testimonial-prev.svg";
+const TESTIMONIAL_NEXT = "/assets/salvi/figma-testimonial-next.svg";
+const TESTIMONIAL_REVIEW_ARROW = "/assets/salvi/figma-testimonial-review-arrow.svg";
 
 const portfolioCards = [
   {
@@ -109,6 +119,155 @@ const galleryCards = [
   { image: "/assets/salvi/request-background.jpg", label: "Request Information", title: "Start a Conversation" },
 ];
 
+const faqItems = [
+  {
+    question: "What Types Of Homes Does Salvi Group Build?",
+    answer: "Salvi Group offers a range of homes designed for different lifestyles and budgets, including bungalows, bi-levels, two-storey homes, executive homes, and customized luxury residences.",
+  },
+  {
+    question: "Where Does Salvi Group Build New Homes?",
+    answer: "We build thoughtfully planned homes and communities in Sherwood Park, Alberta, including Hillshire, Savona, Ironwood, and Salvi Homes.",
+  },
+  {
+    question: "Can I Customize My New Home?",
+    answer: "Yes. Our team works closely with homeowners to shape finishes, details, and living spaces that feel personal to the people who will call them home.",
+  },
+  {
+    question: "What Makes Salvi Group Different?",
+    answer: "For more than 50 years, Salvi Group has combined craftsmanship, trusted relationships, and thoughtful community planning to create homes made to last.",
+  },
+  {
+    question: "How Can I Learn More About Salvi Group?",
+    answer: "Send us a request below, explore our current communities, or contact our Sherwood Park team directly. We would be happy to help.",
+  },
+];
+
+const testimonials = [
+  {
+    title: "Closer to everything",
+    quote: "We moved from a rural area and The Ridge offers a similar lifestyle, but put us much closer to all the amenities. We are very happy with our move here and would highly recommend the community to anyone that desires a quality lifestyle.",
+    name: "Don & Doreen Hunt",
+    role: "Salvi Group homeowners",
+  },
+  {
+    title: "Quality in every detail",
+    quote: "A well designed and planned neighborhood. The obvious concern for quality of the builder and the commitment to customer satisfaction were major factors in our decision to live here. The large yards, ornamental lamp posts, and tree lined streets make the community very attractive.",
+    name: "Cheryl & Allan MacDonald",
+    role: "Salvi Group homeowners",
+  },
+  {
+    title: "A custom-home experience",
+    quote: "The Ironwood team was very accommodating to our special requests. We were involved during construction and had the custom home experience without the custom home price. Any requested changes were always accommodated.",
+    name: "Jason Barton",
+    role: "Ironwood homeowner",
+  },
+  {
+    title: "Excellent from the start",
+    quote: "Salvi worked closely with us even before we contracted them. They were always there for us and we really appreciated their advice. Our first custom home building experience has been excellent and we could not have been more pleased.",
+    name: "Dennis & Pat McGinn",
+    role: "Salvi Group homeowners",
+  },
+  {
+    title: "Very pleased with our new condo",
+    quote: "There was open communication throughout our journey, starting with Steve, our salesman, and the various trades we encountered along the way. Everyone was friendly and no question went unanswered. A beautiful condo, located in a perfect place. A great big thank you.",
+    name: "Andi & Liz Pallas",
+    role: "Salvi Group homeowners",
+  },
+  {
+    title: "Best in the business",
+    quote: "If the quality of construction says anything about the quality of the builder, Salvi is one of the best names in the business. Over the years I have watched Salvi build homes that were consistently better than they had to be.",
+    name: "Residential Siding Contractor",
+    role: "Salvi Group trade partner",
+  },
+  {
+    title: "We love The Ridge",
+    quote: "It is quiet, picturesque, and has a warm atmosphere. Families participate in community events, winter hayrides, and the Christmas lights competition. This small community, surrounded by rolling hills, is unique and a wonderful place to live.",
+    name: "Dave & Judy Wood",
+    role: "The Ridge homeowners",
+  },
+];
+
+function Testimonials() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", loop: false, slidesToScroll: 1, containScroll: "trimSnaps" });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState([]);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  useEffect(() => {
+    if (!emblaApi) return undefined;
+    const updateSelectedSlide = () => {
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+      setCanScrollPrev(emblaApi.canScrollPrev());
+      setCanScrollNext(emblaApi.canScrollNext());
+    };
+    const updateCarousel = () => {
+      setScrollSnaps(emblaApi.scrollSnapList());
+      updateSelectedSlide();
+    };
+    updateCarousel();
+    emblaApi.on("select", updateSelectedSlide);
+    emblaApi.on("reInit", updateCarousel);
+    return () => {
+      emblaApi.off("select", updateSelectedSlide);
+      emblaApi.off("reInit", updateCarousel);
+    };
+  }, [emblaApi]);
+
+  return (
+    <div className="testimonials-shell">
+      <header className="testimonials-head">
+        <h2 id="testimonials-title">Our customers loves<br />what we do</h2>
+        <div className="testimonials-intro">
+          <p>Hear directly from the homeowners who have trusted Salvi Group with their homes and communities.</p>
+          <a className="testimonial-review" href="mailto:info@salvigroup.com?subject=Salvi%20Group%20Review">
+            <span>Write a Review</span>
+            <i aria-hidden="true"><img src={TESTIMONIAL_REVIEW_ARROW} alt="" /></i>
+          </a>
+        </div>
+      </header>
+      <div className="testimonials-embla">
+        <div className="testimonials-viewport" ref={emblaRef}>
+          <div className="testimonials-container">
+            {testimonials.map((testimonial) => (
+              <article className="testimonial-slide" key={testimonial.name}>
+                <div className="testimonial-card">
+                  <h3>&ldquo;{testimonial.title}&rdquo;</h3>
+                  <p>{testimonial.quote}</p>
+                  <footer>
+                    <strong>{testimonial.name}</strong>
+                    <span>{testimonial.role}</span>
+                  </footer>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+        <div className="testimonial-controls" aria-label="Testimonial controls">
+          <button type="button" className="testimonial-arrow" onClick={() => emblaApi?.scrollPrev()} aria-label="Previous testimonial" disabled={!canScrollPrev}>
+            <img src={TESTIMONIAL_PREV} alt="" />
+          </button>
+          <div className="testimonial-dots" aria-label="Choose testimonial">
+            {scrollSnaps.map((_, index) => (
+              <button
+                type="button"
+                className={index === selectedIndex ? "active" : ""}
+                key={`testimonial-snap-${index}`}
+                onClick={() => emblaApi?.scrollTo(index)}
+                aria-label={`Show testimonial ${index + 1}`}
+                aria-current={index === selectedIndex ? "true" : undefined}
+              />
+            ))}
+          </div>
+          <button type="button" className="testimonial-arrow" onClick={() => emblaApi?.scrollNext()} aria-label="Next testimonial" disabled={!canScrollNext}>
+            <img src={TESTIMONIAL_NEXT} alt="" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function setText(root, selector, value) {
   const element = root.querySelector(selector);
   if (element) element.textContent = value;
@@ -153,13 +312,132 @@ function locationCardMarkup(data, delay = "") {
 
 function addLocationsFold(fragment) {
   const manifesto = fragment.querySelector("#manifesto");
-  if (!manifesto) return;
+  const wrap = manifesto?.querySelector(".wrap");
+  if (!wrap) return;
+  const locations = fragment.createElement("div");
+  locations.className = "manifesto-locations";
+  locations.id = "locations";
+  locations.setAttribute("aria-labelledby", "locations-title");
+  locations.innerHTML = `<div class="manifesto-locations-head reveal"><div><span class="eyebrow">Salvi Group Locations</span><h2 class="h2" id="locations-title">Explore four places<br><em>to call home.</em></h2></div><p class="lead">From master-planned communities to thoughtfully crafted homes, discover where Salvi Group is building in Sherwood Park.</p></div><div class="grid">${locationCards.map((card, index) => locationCardMarkup(card, ["", "d1", "d2", ""][index])).join("")}</div>`;
+  wrap.append(locations);
+}
+
+function contactButtonMarkup(label, variant = "light") {
+  const arrow = variant === "blue" ? CTA_ARROW_LIGHT : CTA_ARROW_DARK;
+  return `<a class="figma-contact-button ${variant}" href="#contact"><span>${label}</span><i aria-hidden="true"><img src="${arrow}" alt=""></i></a>`;
+}
+
+function addBuildFutureFold(fragment) {
+  const experience = fragment.querySelector(".experience");
+  if (!experience) return;
   const section = fragment.createElement("section");
-  section.className = "portfolio";
-  section.id = "locations";
-  section.setAttribute("aria-labelledby", "locations-title");
-  section.innerHTML = `<div class="wrap"><div class="sec-head reveal"><div><span class="eyebrow">Salvi Group Locations</span><h2 class="h2" id="locations-title">Explore four places<br><em>to call home.</em></h2></div><p class="lead">From master-planned communities to thoughtfully crafted homes, discover where Salvi Group is building in Sherwood Park.</p></div><div class="grid">${locationCards.map((card, index) => locationCardMarkup(card, ["", "d1", "d2", ""][index])).join("")}</div></div>`;
-  manifesto.insertAdjacentElement("afterend", section);
+  section.className = "future-fold";
+  section.id = "future";
+  section.setAttribute("aria-labelledby", "future-title");
+  section.innerHTML = `<img src="/assets/salvi/figma-build-future.png" alt="A modern Salvi Group home glowing at dusk"><div class="future-shade" aria-hidden="true"></div><div class="future-inner"><h2 id="future-title">Build Your Future With Salvi</h2>${contactButtonMarkup("Contact Us")}</div>`;
+  experience.insertAdjacentElement("beforebegin", section);
+}
+
+function replaceWhatWeDoFold(fragment) {
+  const experience = fragment.querySelector(".experience");
+  if (!experience) return;
+  experience.className = "what-we-do-fold";
+  experience.id = "experience";
+  experience.setAttribute("aria-labelledby", "what-we-do-title");
+  experience.innerHTML = `<div class="what-we-do-wrap"><header class="what-we-do-head"><h2 id="what-we-do-title">What We Do</h2><div><p>With 50 years of experience building new homes, Salvi Group has been planning, designing, and delivering Sherwood Park’s finest residential and commercial developments.</p>${contactButtonMarkup("Contact Us", "blue")}</div></header><article class="what-we-do-card"><img src="/assets/salvi/figma-what-we-do.png" alt="A craftsperson working on Salvi Group commercial plans"><div class="what-we-do-shade" aria-hidden="true"></div><h3>Developing Commercial</h3>${contactButtonMarkup("Contact Us")}<p>Salvi Group develop commercial spaces in Sherwood Park that bring together dining, retail, and professional services to serve growing community needs.</p></article></div>`;
+}
+
+function addTestimonialsFold(fragment) {
+  const process = fragment.querySelector(".process");
+  if (!process) return;
+  const section = fragment.createElement("section");
+  section.className = "testimonials-fold";
+  section.id = "testimonials";
+  section.setAttribute("aria-labelledby", "testimonials-title");
+  section.innerHTML = '<div data-testimonials-root></div>';
+  process.insertAdjacentElement("beforebegin", section);
+}
+
+function faqItemMarkup(item, index) {
+  const panelId = `faq-panel-${index + 1}`;
+  const isOpen = index === 0;
+  return `<article class="faq-item${isOpen ? " open" : ""}"><button class="faq-trigger" type="button" aria-expanded="${isOpen}" aria-controls="${panelId}"><span>${item.question}</span><b aria-hidden="true">+</b></button><div class="faq-panel" id="${panelId}"${isOpen ? "" : " hidden"}><p>${item.answer}</p></div></article>`;
+}
+
+function addFaqFold(fragment) {
+  const contact = fragment.querySelector(".cta");
+  if (!contact) return;
+  const section = fragment.createElement("section");
+  section.className = "faq-fold";
+  section.id = "faqs";
+  section.setAttribute("aria-labelledby", "faq-title");
+  section.innerHTML = `<div class="faq-wrap"><header class="faq-head"><h2 id="faq-title">Frequently Asked<br>Questions</h2><p>Find answers about Salvi Group homes, communities, and the process of building in Sherwood Park. Our team is here to help you make informed choices.</p></header><div class="faq-content"><img class="faq-image" src="/assets/salvi/figma-faq-home.png" alt="A warm, modern Salvi Group home at sunset"><div class="faq-list">${faqItems.map(faqItemMarkup).join("")}</div></div></div>`;
+  contact.insertAdjacentElement("beforebegin", section);
+}
+
+function addSubscribeFold(fragment) {
+  const footer = fragment.querySelector("footer");
+  if (!footer) return;
+  const section = fragment.createElement("section");
+  section.className = "subscribe-fold";
+  section.id = "subscribe";
+  section.setAttribute("aria-labelledby", "subscribe-title");
+  section.innerHTML = `<div class="subscribe-backdrop" aria-hidden="true"></div><div class="subscribe-content"><h2 id="subscribe-title">Subscribe to Emails</h2><p>Get Salvi Group news, new-home updates, and community information delivered to your inbox.</p><form id="newsletterForm" class="newsletter-form"><label class="sr-only" for="newsletterEmail">Enter your email</label><input id="newsletterEmail" name="email" type="email" autocomplete="email" placeholder="Enter Your Email" required><label class="form-consent newsletter-consent"><input name="consent" type="checkbox" required><span>I have read and agree to the <a href="https://salvigroup.com/privacy-policy/">Terms &amp; Conditions</a> and <a href="https://salvigroup.com/privacy-policy/">Privacy Policy</a>.</span></label><button type="submit" class="form-submit light-submit">Submit Now <span aria-hidden="true">→</span></button></form><p id="newsletterDone" class="newsletter-done" role="status" aria-live="polite">Thank you — you are subscribed.</p></div>`;
+  footer.insertAdjacentElement("beforebegin", section);
+}
+
+function replaceContactFold(fragment) {
+  const contact = fragment.querySelector(".cta");
+  if (!contact) return;
+  contact.className = "contact-fold";
+  contact.id = "contact";
+  contact.setAttribute("aria-labelledby", "request-title");
+  contact.innerHTML = `<div class="wrap request-wrap"><div class="request-heading"><div><h2 id="request-title">Request Information</h2><p>Fill out the form to request more information and we will contact you as soon as possible.</p><span class="request-rule" aria-hidden="true"></span></div><p class="required-note"><sup>*</sup> indicates required fields</p></div><form id="enquiry" class="request-form"><div class="request-grid"><label><span>Your Name</span><input name="name" type="text" autocomplete="name" placeholder="John Doe" required></label><label><span>Enter Your Email</span><input name="email" type="email" autocomplete="email" placeholder="john@example.com" required></label><label><span>Your Phone</span><input name="phone" type="tel" autocomplete="tel" placeholder="(780) 000-0000" required></label><label><span>Select Subject</span><select name="subject" required><option value="Crafting Homes">Crafting Homes</option><option value="Building Communities">Building Communities</option><option value="Developing Commercial">Developing Commercial</option><option value="General Inquiry">General Inquiry</option></select></label></div><label class="field-full"><span>Select Community</span><select name="community" required><option value="Hillshire">Hillshire</option><option value="Savona">Savona</option><option value="Ironwood">Ironwood</option><option value="Salvi Homes">Salvi Homes</option></select></label><label class="field-full"><span>How can we help you?</span><textarea name="message" rows="6" required></textarea></label><label class="form-consent"><input name="consent" type="checkbox" required><span>I have read and agree to the <a href="https://salvigroup.com/privacy-policy/">Terms &amp; Conditions</a> and <a href="https://salvigroup.com/privacy-policy/">Privacy Policy</a>.</span></label><button type="submit" class="form-submit">Submit <span aria-hidden="true">→</span></button></form><div id="formDone" class="form-done" role="status" aria-live="polite"><b>Thank you.</b><p>Your request has been received. A Salvi Group team member will be in touch shortly.</p></div></div>`;
+}
+
+function replaceFooter(fragment) {
+  const footer = fragment.querySelector("footer");
+  if (!footer) return;
+  footer.className = "salvi-footer";
+  footer.id = "footer";
+  footer.setAttribute("aria-labelledby", "footer-title");
+  footer.innerHTML = `<div class="salvi-footer-inner"><div class="footer-land"><h2 id="footer-title">SALVI GROUP</h2><div class="land-acknowledgement"><h3>Treaty Six Territory</h3><p>We acknowledge that the land on which the Salvi Group office resides is in Treaty Six Territory; a traditional meeting ground, gathering place, and traveling route for many Indigenous people. We honour and respect the history, languages, ceremonies, and culture of the First Nations, Métis, and Inuit who call this territory home.</p></div></div><div class="footer-locations"><section class="footer-location"><div class="footer-location-main"><img class="footer-location-logo salvi" src="${FOOTER_SALVI_LOGO}" alt="Salvi Group"><div class="footer-hours"><p>Office hours:</p><p><b>Monday:</b> 8 AM – 12 PM – 1 PM – 5 PM</p></div></div><div class="footer-data four"><a href="https://maps.google.com/?q=98+Sioux+Road+Sherwood+Park+AB+T8A+3X5"><b>Address:</b> 98 Sioux Road Sherwood Park, AB T8A 3X5</a><a href="tel:+17804671543"><b>Phone:</b> +1 (780) 467 1543</a><a href="tel:+17804673301"><b>Phone:</b> +1 (780) 467 3301</a><a href="mailto:info@salvigroup.com"><b>Email:</b> info@salvigroup.com</a></div></section><section class="footer-location"><div class="footer-location-main"><img class="footer-location-logo hillshire" src="${FOOTER_HILLSHIRE_LOGO}" alt="Hillshire by Salvi"><div class="footer-hours hillshire-hours"><p>Office hours:</p><p><b>Monday – Thursday:</b> 3 PM – 8 PM <b>Friday:</b> Closed <b>Open:</b> Sat, Sun, and the holidays: 12:00 pm – 5:00 pm</p></div></div><div class="footer-data three"><a href="https://maps.google.com/?q=117+Birkshire+Crescent+Sherwood+Park+AB+T8B+0C9"><b>Address:</b> 117 Birkshire Crescent Sherwood Park, AB T8B 0C9</a><a href="tel:+17802380056"><b>Phone:</b> +1 (780) 238 0056</a><a href="mailto:hillshire@salvigroup.com"><b>Email:</b> hillshire@salvigroup.com</a></div></section><section class="footer-location"><div class="footer-location-main"><img class="footer-location-logo savona" src="${FOOTER_SAVONA_LOGO}" alt="Savona by Salvi"><div class="footer-hours appointment"><p><b>By appointment only. Schedule yours today!</b></p></div></div><div class="footer-data three"><a href="https://maps.google.com/?q=61+Festival+Way+Sherwood+Park+AB+T8H+0Y9"><b>Address:</b> 61 Festival Way Sherwood Park, AB T8H 0Y9</a><a href="tel:+17807175431"><b>Phone:</b> +1 (780) 717 5431</a><a href="mailto:savona@salvigroup.com"><b>Email:</b> savona@salvigroup.com</a></div></section></div><div class="footer-follow"><div><h3>Follow Us</h3><p><a href="https://www.facebook.com/SalviGroup">Facebook</a><span>–</span><a href="https://www.instagram.com/salvigroup_">Instagram</a><span>–</span><a href="https://www.linkedin.com/company/salvigroup">LinkedIn</a></p></div><div class="footer-policies"><a href="https://salvigroup.com/terms-of-use/">Terms of Use</a><a href="https://salvigroup.com/privacy-policy/">Privacy Policy</a></div></div><div class="footer-divider" aria-hidden="true"></div><p class="footer-copyright">© Copyright 2026 Salvi Group – All Rights Reserved</p><a class="footer-credit" href="https://infinitidigital.us/">Design &amp; Development by: <u>Infinitidigital.us</u></a></div>`;
+}
+
+function attachFormEnhancements(root) {
+  const newsletter = root.querySelector("#newsletterForm");
+  const newsletterDone = root.querySelector("#newsletterDone");
+  if (!newsletter || !newsletterDone) return;
+  newsletter.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!newsletter.checkValidity()) {
+      newsletter.reportValidity();
+      return;
+    }
+    newsletter.reset();
+    newsletterDone.classList.add("show");
+  });
+
+  root.querySelectorAll(".faq-item").forEach((item) => {
+    const trigger = item.querySelector(".faq-trigger");
+    const panel = item.querySelector(".faq-panel");
+    if (!trigger || !panel) return;
+    trigger.addEventListener("click", () => {
+      const shouldOpen = trigger.getAttribute("aria-expanded") !== "true";
+      root.querySelectorAll(".faq-item").forEach((otherItem) => {
+        const otherTrigger = otherItem.querySelector(".faq-trigger");
+        const otherPanel = otherItem.querySelector(".faq-panel");
+        otherItem.classList.remove("open");
+        otherTrigger?.setAttribute("aria-expanded", "false");
+        if (otherPanel) otherPanel.hidden = true;
+      });
+      if (shouldOpen) {
+        item.classList.add("open");
+        trigger.setAttribute("aria-expanded", "true");
+        panel.hidden = false;
+      }
+    });
+  });
 }
 
 function rebrandExistingTheme(fragment) {
@@ -259,18 +537,9 @@ function rebrandExistingTheme(fragment) {
     portfolio.querySelectorAll(".card").forEach((card, index) => updatePortfolioCard(card, portfolioCards[index]));
   }
 
-  const experience = fragment.querySelector(".experience");
-  if (experience) {
-    setText(experience, ".sec-head .eyebrow", "What We Do");
-    setHeading(experience, ".sec-head .h2", "Building <em>better places.</em>");
-    setText(experience, ".g-hint", "Scroll to explore →");
-    experience.querySelectorAll(".r-card").forEach((card, index) => {
-      const data = galleryCards[index];
-      setImage(card, "img", data.image, data.title);
-      setText(card, ".m span", data.label);
-      setText(card, ".m b", data.title);
-    });
-  }
+  addBuildFutureFold(fragment);
+  replaceWhatWeDoFold(fragment);
+  addTestimonialsFold(fragment);
 
   const process = fragment.querySelector(".process");
   if (process) {
@@ -291,46 +560,16 @@ function rebrandExistingTheme(fragment) {
     });
   }
 
-  const contact = fragment.querySelector(".cta");
-  if (contact) {
-    setText(contact, ".eyebrow", "Request Information");
-    setHeading(contact, "h2", "Request <em>information.</em>");
-    setText(contact, ".lead", "Fill out the form to request more information and a Salvi Group team member will contact you as soon as possible.");
-    const labels = contact.querySelectorAll("#enquiry label");
-    if (labels[0]) labels[0].textContent = "Full name";
-    if (labels[1]) labels[1].textContent = "Email";
-    if (labels[2]) labels[2].textContent = "How can we help you?";
-    const fields = contact.querySelectorAll("#enquiry input, #enquiry textarea");
-    if (fields[0]) fields[0].setAttribute("placeholder", "Your name");
-    if (fields[1]) fields[1].setAttribute("placeholder", "you@email.com");
-    if (fields[2]) fields[2].setAttribute("placeholder", "Tell us which Salvi community or home interests you.");
-    const submit = contact.querySelector("#enquiry button");
-    if (submit) submit.innerHTML = 'Submit request <span class="arrow">→</span>';
-    setText(contact, "#formDone b", "Thank you.");
-    setText(contact, "#formDone p", "Your request has been received. A Salvi Group team member will be in touch shortly.");
-  }
-
-  const footer = fragment.querySelector("footer");
-  if (footer) {
-    setLogo(footer, ".foot-brand .brand", 150);
-    setText(footer, ".foot-brand p", "Building exceptional homes and communities in Sherwood Park for more than 50 years.");
-    const columns = footer.querySelectorAll(".foot-col");
-    if (columns[0]) columns[0].innerHTML = '<h4>Communities</h4><a href="https://salvigroup.com/communities/hillshire/">Hillshire by Salvi</a><a href="https://salvigroup.com/communities/savona/">Savona Centre in the Park</a><a href="https://salvigroup.com/homes/ironwood-homes/">Ironwood Homes</a><a href="https://salvigroup.com/homes/">Salvi Homes</a>';
-    if (columns[1]) columns[1].innerHTML = '<h4>Office</h4><a href="https://maps.google.com/?q=98+Sioux+Road+Sherwood+Park+AB">98 Sioux Road, Sherwood Park</a><a href="tel:+17804671543">+1 (780) 467 1543</a><a href="mailto:info@salvigroup.com">info@salvigroup.com</a><a href="#contact">Mon–Fri: 8am–12pm | 1pm–5pm</a>';
-    if (columns[2]) columns[2].innerHTML = '<h4>Connect</h4><a href="https://www.facebook.com/SalviGroup">Facebook</a><a href="https://www.instagram.com/salvigroup_">Instagram</a><a href="https://www.linkedin.com/company/salvigroup">LinkedIn</a><a href="#contact">Request Information</a>';
-    const footerItems = footer.querySelectorAll(".foot-bot > span");
-    if (footerItems[0]) footerItems[0].textContent = "© 2026 Salvi Group · All Rights Reserved";
-    if (footerItems[1]) {
-      footerItems[1].textContent = "Salvi Group";
-      footerItems[1].setAttribute("aria-label", "Salvi Group");
-    }
-    if (footerItems[2]) footerItems[2].textContent = "Privacy · Terms · Equal Housing Opportunity";
-  }
+  addFaqFold(fragment);
+  replaceContactFold(fragment);
+  addSubscribeFold(fragment);
+  replaceFooter(fragment);
 }
 
 export function App() {
   const mountRef = useRef(null);
   const [loadError, setLoadError] = useState("");
+  const [testimonialsHost, setTestimonialsHost] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -357,13 +596,16 @@ export function App() {
         style.textContent = sourceStyle.textContent;
         document.head.appendChild(style);
 
+        setTestimonialsHost(null);
         mountRef.current.innerHTML = fragment.body.innerHTML;
+        setTestimonialsHost(mountRef.current.querySelector("[data-testimonials-root]"));
         document.title = "Salvi Group Home Builder";
 
         const engine = document.createElement("script");
         engine.id = SCRIPT_ID;
         engine.textContent = `(() => {\n${sourceScript.textContent}\n})();`;
         document.body.appendChild(engine);
+        attachFormEnhancements(mountRef.current);
       } catch (error) {
         if (active) setLoadError(error instanceof Error ? error.message : "The local site could not be loaded.");
       }
@@ -372,9 +614,10 @@ export function App() {
     mountExistingTheme();
     return () => {
       active = false;
+      setTestimonialsHost(null);
     };
   }, []);
 
   if (loadError) return <main className="source-error">{loadError}</main>;
-  return <div ref={mountRef} />;
+  return <><div ref={mountRef} />{testimonialsHost ? createPortal(<Testimonials />, testimonialsHost) : null}</>;
 }
