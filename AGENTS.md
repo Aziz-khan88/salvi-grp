@@ -34,3 +34,5 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 - The `#manifesto` “50 years of building exceptional homes” fold uses a compact white/blue-gold gradient, high-contrast treatment (not the original oversized dark spacing); cap its heading at 64 px and scale it down below large desktop.
 - Use `-1px` letter spacing for all display and heading typography; preserve the 80 px Figma desktop target only at its 1920 px reference width and step it down at narrower viewports.
 - All Request Information and Subscribe to Emails submit buttons use Salvi blue `#216192` (including their default state), with a darker blue hover state.
+- Replace the legacy brown `#64514F` across the full site with Salvi blue `#216192`; this includes the testimonial review CTA and active testimonial pagination bars.
+- In testimonial controls, enabled arrows use the white Figma arrow asset, while a disabled/default arrow uses the original dark-gray previous-arrow treatment; keep the left arrow rotated left.

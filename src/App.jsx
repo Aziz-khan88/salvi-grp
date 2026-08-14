@@ -245,7 +245,7 @@ function Testimonials() {
         </div>
         <div className="testimonial-controls" aria-label="Testimonial controls">
           <button type="button" className="testimonial-arrow" onClick={() => emblaApi?.scrollPrev()} aria-label="Previous testimonial" disabled={!canScrollPrev}>
-            <img src={TESTIMONIAL_PREV} alt="" />
+            <img src={canScrollPrev ? TESTIMONIAL_NEXT : TESTIMONIAL_PREV} alt="" />
           </button>
           <div className="testimonial-dots" aria-label="Choose testimonial">
             {scrollSnaps.map((_, index) => (
@@ -260,7 +260,7 @@ function Testimonials() {
             ))}
           </div>
           <button type="button" className="testimonial-arrow" onClick={() => emblaApi?.scrollNext()} aria-label="Next testimonial" disabled={!canScrollNext}>
-            <img src={TESTIMONIAL_NEXT} alt="" />
+            <img src={canScrollNext ? TESTIMONIAL_NEXT : TESTIMONIAL_PREV} alt="" />
           </button>
         </div>
       </div>

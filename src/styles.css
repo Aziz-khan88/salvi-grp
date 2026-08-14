@@ -177,10 +177,10 @@ body, button, input, select, textarea { font-family: var(--sans) !important; }
 .testimonials-head h2 { margin:0; color:#fff; font-size:clamp(2.75rem,4.17vw,5rem); font-weight:400; letter-spacing:-.06em; line-height:.9625; }
 .testimonials-intro { padding-top:clamp(10px,1.4vw,27px); }
 .testimonials-intro p { max-width:643px; margin:0 0 30px; color:#fff; font:400 clamp(.86rem,1.04vw,1.25rem)/1.45 var(--sans); }
-.testimonial-review { display:inline-flex; min-height:60px; align-items:center; overflow:hidden; border-radius:100px; background:#64514f; color:#fff; text-decoration:none; font:500 18px/1 var(--sans); transition:transform .25s ease,background .25s ease; }
-.testimonial-review:hover { background:#795f5c; transform:translateY(-2px); }
+.testimonial-review { display:inline-flex; min-height:60px; align-items:center; overflow:hidden; border-radius:100px; background:#216192; color:#fff; text-decoration:none; font:500 18px/1 var(--sans); transition:transform .25s ease,background .25s ease; }
+.testimonial-review:hover { background:#174a6e; transform:translateY(-2px); }
 .testimonial-review span { display:grid; min-width:194px; padding:0 24px; place-items:center; }
-.testimonial-review i { display:grid; width:60px; height:60px; place-items:center; border-radius:50%; background:#64514f; }
+.testimonial-review i { display:grid; width:60px; height:60px; place-items:center; border-radius:50%; background:#216192; }
 .testimonial-review i img { width:23.25px; height:22px; object-fit:contain; }
 .testimonials-viewport { overflow:hidden; }
 .testimonials-container { display:flex; gap:15px; touch-action:pan-y pinch-zoom; }
@@ -201,7 +201,7 @@ body, button, input, select, textarea { font-family: var(--sans) !important; }
 .testimonial-arrow:first-child img { transform:rotate(180deg); }
 .testimonial-dots { display:flex; gap:5.5px; }
 .testimonial-dots button { width:100%; height:5.5px; flex:1; padding:0; border:0; border-radius:999px; background:#d9d9d9; cursor:pointer; transition:background .25s ease; }
-.testimonial-dots button.active { background:#64514f; }
+.testimonial-dots button.active { background:#216192; }
 
 /* The original process anatomy remains, with the user-requested white presentation and legible cards. */
 #root .process { background:#fff!important; color:#080808!important; }
